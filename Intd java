@@ -1,0 +1,22 @@
+public void introduceDelay(TCMaster tcMaster, TCSteps step) {
+    log.info("[{}][{}] - Updating delay step log to In Progress. ", tcMaster.getTcId(), step.getSequenceNo(), step.getStepName());
+
+    long tcExecId = tcMasterServiceHelper.insertLogEntry(tcMaster.getTcId(), step, Constants.INPROGRESS);
+    log.info("[{}][{}] - Introduced delay step called in thread - {}", tcMaster.getTcId(), step.getSequenceNo(), step.getStepName(), Thread.currentThread().getName());
+
+    try {
+        if (tcMasterServiceHelper.getAndValidateParametersSchema(step)) {
+            IntroduceDelayJSON delayJSON = new ObjectMapper().readValue(step.getParameters(), IntroduceDelayJSON.class);
+            long delaySeconds = delayJSON.getDelaySeconds();
+            tcMasterServiceHelper.introduceDelay(delaySeconds);
+        } else {
+            log.info("[{}][{}] - Updating delay step log to Failed.", tcMaster.getTcId(), step.getSequenceNo(), step.getStepName());
+            tcMasterServiceHelper.updateLogEntry(tcExecId, Constants.FAILED, "");
+            throw new RuntimeException("Schema validation failed");
+        }
+    } catch (Exception e) {
+        log.info("[{}][{}] - Error while updating delay step log to Failed.", tcMaster.getTcId(), step.getSequenceNo(), step.getStepName());
+        tcMasterServiceHelper.updateLogEntry(tcExecId, Constants.FAILED, "");
+        throw new RuntimeException("Error while introducing delay step: " + e.getMessage(), e);
+    }
+}
