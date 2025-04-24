@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head}"></head>
+<body class="gradient-bg min-h-screen flex flex-col">
+<!-- Header -->
+<div th:replace="~{fragments :: header}"></div>
+
+<!-- Main Content -->
+<main class="container mx-auto px-4 py-12 flex-grow">
+    <div class="glass-card p-8 rounded-2xl shadow-xl animate__animated animate__fadeIn">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold bg-gradient-to-r from-blue-600 to-red-600 bg-clip-text text-transparent tracking-tight">
+                <a th:href="@{/tcsteps}" class="hover:underline">Test Case Steps Management</a>
+                <span class="text-gray-400"> / Add New Step</span>
+            </h1>
+        </div>
+
+        <form th:action="@{/tcsteps/save}" th:object="${tcSteps}" method="post" class="space-y-6" id="stepForm" enctype="multipart/form-data">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="form-group">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Step ID</label>
+                    <div class="glass-card w-full px-4 py-2 rounded-lg bg-gray-100">
+                        <span class="text-gray-600">Auto-generated</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="tcId" class="block text-sm font-medium text-gray-700 mb-1">Test Case</label>
+                    <select id="tcId" th:field="*{tcId}" class="glass-card w-full px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        <option value="">Select Test Case</option>
+                        <option th:each="testCase : ${testCases}" th:value="${testCase.tcId}" th:text="${testCase.tcId + ' - ' + testCase.tcName}"></option>
+                    </select>
+                    <p class="mt-1 text-sm text-red-600" th:if="${#fields.hasErrors('tcId')}" th:errors="*{tcId}">Please select a test case</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="stepName" class="block text-sm font-medium text-gray-700 mb-1">Step Name</label>
+                    <select id="stepName" th:field="*{stepName}" class="glass-card w-full px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        <option value="">Select Step</option>
+                        <option th:each="stepConfig : ${stepConfigs}" th:value="${stepConfig.stepName}" th:text="${stepConfig.stepName}"></option>
+                    </select>
+                    <p class="mt-1 text-sm text-red-600" th:if="${#fields.hasErrors('stepName')}" th:errors="*{stepName}">Please select a step</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="sequenceNo" class="block text-sm font-medium text-gray-700 mb-1">Sequence Number</label>
+                    <input type="number" id="sequenceNo" th:field="*{sequenceNo}" class="glass-card w-full px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" min="1" required>
+                    <p class="mt-1 text-sm text-red-600" th:if="${#fields.hasErrors('sequenceNo')}" th:errors="*{sequenceNo}">Valid sequence number required</p>
+                </div>
+
+                <div class="form-group">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                    <select th:field="*{status}" class="glass-card w-full px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
+                    </select>
+                </div>
+
+                <div class="form-group md:col-span-2">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Parameters</label>
+                    <div id="dynamicParameters" class="space-y-4"></div>
+                    <input type="hidden" id="parameters" th:field="*{parameters}" name="parameters" />
+                    <small class="text-gray-500 text-xs">Parameters will be generated based on the selected step</small>
+                    <p class="mt-1 text-sm text-red-600" th:if="${#fields.hasErrors('parameters')}" th:errors="*{parameters}">Invalid parameters format</p>
+                </div>
+
+                <div id="fileUploadSection" class="hidden form-group md:col-span-2">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">SQL File (Optional)</label>
+                    <input type="file" id="sqlFile" name="sqlFile" accept=".sql" class="glass-card w-full px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+            </div>
+
+            <div class="flex justify-end space-x-4 pt-6">
+                <a th:href="@{/tcsteps}" class="btn glass-card px-6 py-2 rounded-lg text-gray-600 hover:text-gray-800 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">Cancel</a>
+                <button type="submit" class="btn glass-card px-6 py-2 rounded-lg bg-gradient-to-r from-blue-600 to-red-600 text-white hover:from-blue-700 hover:to-red-700 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">Save Test Step</button>
+            </div>
+        </form>
+    </div>
+</main>
+
+<!-- Footer -->
+<div th:replace="~{fragments :: footer}"></div>
+<div th:replace="~{fragments :: scripts}"></div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const stepNameSelect = document.getElementById('stepName');
+        const dynamicParametersDiv = document.getElementById('dynamicParameters');
+        const parametersHiddenInput = document.getElementById('parameters');
+        const fileUploadSection = document.getElementById('fileUploadSection');
+        const sqlFileInput = document.getElementById('sqlFile');
+        const form = document.getElementById('stepForm');
+
+        if (!stepNameSelect || !form || !parametersHiddenInput) return;
+
+        parametersHiddenInput.value = '{}';
+
+        stepNameSelect.addEventListener('change', function () {
+            const selected = this.value;
+            fileUploadSection.classList.toggle('hidden', selected !== 'cleanAndInsertTestData');
+            if (selected) {
+                fetchSchemaForStep(selected);
+            } else {
+                clearParameterFields();
+            }
+        });
+
+        form.addEventListener('submit', function (e) {
+            updateParametersFromInputs();
+
+            if (stepNameSelect.value === 'cleanAndInsertTestData' && sqlFileInput?.files.length > 0) {
+                e.preventDefault();
+
+                const formData = new FormData(form);
+                const file = sqlFileInput.files[0];
+                const tcId = document.getElementById('tcId').value;
+                const stepName = stepNameSelect.value;
+                const sequenceNo = document.getElementById('sequenceNo').value;
+                const safeTc = tcId.replace(/[^a-zA-Z0-9]/g, '');
+                const fileName = `${safeTc}_${stepName}_${sequenceNo}.sql`;
+
+                formData.set('sqlFile', new File([file], fileName, { type: file.type }));
+
+                fetch(form.action, {
+                    method: 'POST',
+                    body: formData
+                }).then(response => {
+                    if (response.redirected) {
+                        window.location.href = response.url;
+                    } else {
+                        return response.text().then(text => alert('Error: ' + text));
+                    }
+                }).catch(err => {
+                    alert('Failed to upload: ' + err);
+                });
+            }
+        });
+
+        function fetchSchemaForStep(stepName) {
+            fetch(`/step-schemas/${encodeURIComponent(stepName)}`)
+                .then(response => response.json())
+                .then(schema => {
+                    if (!schema || !schema.schemaDefinition) throw new Error('Invalid schema');
+                    generateParameterFields(schema);
+                })
+                .catch(error => {
+                    console.error('Error fetching schema:', error);
+                    clearParameterFields();
+                });
+        }
+
+        function generateParameterFields(schema) {
+            clearParameterFields();
+            try {
+                const parsedSchema = JSON.parse(schema.schemaDefinition);
+                const properties = parsedSchema.properties || {};
+
+                Object.keys(properties).forEach(key => {
+                    const param = properties[key];
+                    const inputWrapper = document.createElement('div');
+                    inputWrapper.classList.add('flex', 'space-x-4', 'items-center', 'border-b', 'pb-4', 'mt-4');
+
+                    const label = document.createElement('label');
+                    label.classList.add('block', 'text-sm', 'font-medium', 'text-gray-700');
+                    label.innerText = key;
+
+                    const input = document.createElement('input');
+                    input.type = param.type === 'number' ? 'number' : 'text';
+                    input.name = `param_${key}`;
+                    input.classList.add('glass-card', 'w-full', 'px-4', 'py-2', 'rounded-lg', 'focus:outline-none', 'focus:ring-2', 'focus:ring-blue-500');
+
+                    inputWrapper.appendChild(label);
+                    inputWrapper.appendChild(input);
+                    dynamicParametersDiv.appendChild(inputWrapper);
+                });
+            } catch (error) {
+                console.error('Error parsing schema:', error);
+            }
+        }
+
+        function updateParametersFromInputs() {
+            const inputs = dynamicParametersDiv.querySelectorAll('input[name^="param_"]');
+            const result = {};
+            inputs.forEach(input => {
+                const key = input.name.replace('param_', '');
+                result[key] = input.value;
+            });
+            parametersHiddenInput.value = JSON.stringify(result);
+        }
+
+        function clearParameterFields() {
+            dynamicParametersDiv.innerHTML = '';
+        }
+    });
+</script>
+</body>
+</html>
