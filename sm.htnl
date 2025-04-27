@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head}">
+</head>
+<body class="gradient-bg min-h-screen flex flex-col">
+<!-- Header -->
+<div th:replace="~{fragments :: header}"></div>
+
+<!-- Main Content -->
+<main class="container mx-auto px-4 py-12 flex-grow w-full">
+    <div class="glass-card p-8 rounded-2xl shadow-xl animate__animated animate__fadeIn">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold bg-gradient-to-r from-blue-600 to-red-600 bg-clip-text text-transparent tracking-tight">Server Monitoring</h1>
+            <div>
+                <button id="refreshData" class="btn glass-card px-4 py-2 rounded-lg text-blue-600 hover:text-blue-800 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg flex items-center gap-2">
+                    <i class="fas fa-sync-alt"></i>
+                    <span class="tracking-tight">Refresh</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Host Selection -->
+        <div class="mb-8">
+            <select id="hostSelect" class="glass-card w-64 p-2 border rounded-lg">
+                <option value="">Select a host...</option>
+                <option th:each="host : ${hosts}"
+                        th:value="${host.hostName}"
+                        th:text="${host.hostName + ' (' + host.category + ')'}">
+                </option>
+            </select>
+        </div>
+
+        <!-- System Metrics Cards and Action Buttons -->
+        <div class="grid md:grid-cols-4 gap-6 mb-8">
+            <!-- CPU Usage -->
+            <div class="glass-card p-4 rounded-xl">
+                <div class="bg-blue-100 p-3 rounded-full mb-3 mx-auto w-12 h-12 flex items-center justify-center">
+                    <i class="fas fa-microchip text-xl text-blue-600"></i>
+                </div>
+                <h3 class="font-semibold text-md mb-2 text-blue-600">CPU Usage</h3>
+                <div class="text-center">
+                    <span id="cpuUsage" class="text-2xl font-bold">-</span>
+                    <span class="text-gray-600">%</span>
+                </div>
+                <div class="text-sm text-gray-600 mt-2">
+                    <div>User: <span id="cpuUser">-</span>%</div>
+                    <div>System: <span id="cpuSystem">-</span>%</div>
+                    <div>Idle: <span id="cpuIdle">-</span>%</div>
+                </div>
+                <div class="mt-3">
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div id="cpuProgressBar" class="bg-blue-600 h-2 rounded-full" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Memory Usage -->
+            <div class="glass-card p-4 rounded-xl">
+                <div class="bg-green-100 p-3 rounded-full mb-3 mx-auto w-12 h-12 flex items-center justify-center">
+                    <i class="fas fa-memory text-xl text-green-600"></i>
+                </div>
+                <h3 class="font-semibold text-md mb-2 text-green-600">Memory Usage</h3>
+                <div class="text-center">
+                    <span id="memoryUsage" class="text-2xl font-bold">-</span>
+                    <span class="text-gray-600">MB</span>
+                </div>
+                <div class="text-sm text-gray-600 mt-2">
+                    <div>Total: <span id="memoryTotal">-</span> MB</div>
+                    <div>Used: <span id="memoryUsed">-</span> MB</div>
+                    <div>Free: <span id="memoryFree">-</span> MB</div>
+                </div>
+                <div class="mt-3">
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div id="memoryProgressBar" class="bg-green-600 h-2 rounded-full" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Disk Usage -->
+            <div class="glass-card p-4 rounded-xl">
+                <div class="bg-purple-100 p-3 rounded-full mb-3 mx-auto w-12 h-12 flex items-center justify-center">
+                    <i class="fas fa-hard-drive text-xl text-purple-600"></i>
+                </div>
+                <h3 class="font-semibold text-md mb-2 text-purple-600">Disk Usage</h3>
+                <div id="diskUsage" class="text-sm text-gray-600">
+                    <!-- Disk usage will be populated dynamically -->
+                </div>
+            </div>
+
+            <!-- Action Buttons Card -->
+            <div class="glass-card p-4 rounded-xl">
+                <div class="flex flex-col space-y-4">
+                    <!-- Start TCA Button -->
+                    <div class="mb-2">
+                        <div class="bg-blue-100 p-3 rounded-full mb-3 mx-auto w-12 h-12 flex items-center justify-center">
+                            <i class="fas fa-shield-alt text-xl text-blue-600"></i>
+                        </div>
+                        <h3 class="font-semibold text-md mb-2 text-blue-600 text-center">Security Analysis</h3>
+                        <button id="startTCA" class="btn glass-card w-full px-4 py-2 rounded-lg text-blue-600 hover:text-blue-800 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg flex items-center gap-2 justify-center">
+                            <i class="fas fa-play"></i>
+                            <span class="tracking-tight">Start TCA</span>
+                        </button>
+                    </div>
+                    
+                    <!-- Run Socket Client Button -->
+                    <div>
+                        <div class="bg-indigo-100 p-3 rounded-full mb-3 mx-auto w-12 h-12 flex items-center justify-center">
+                            <i class="fas fa-plug text-xl text-indigo-600"></i>
+                        </div>
+                        <h3 class="font-semibold text-md mb-2 text-indigo-600 text-center">Network Client</h3>
+                        <button id="runSocketClient" class="btn glass-card w-full px-4 py-2 rounded-lg text-indigo-600 hover:text-indigo-800 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg flex items-center gap-2 justify-center">
+                            <i class="fas fa-terminal"></i>
+                            <span class="tracking-tight">Run Socket Client</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Process Table Card -->
+        <div class="glass-card p-6 rounded-xl mt-8">
+            <h3 class="font-semibold text-lg mb-4">Running Processes</h3>
+            <table id="processTable" class="w-full">
+                <thead>
+                <tr>
+                    <th>PID</th>
+                    <th>User</th>
+                    <th>CPU %</th>
+                    <th>Memory %</th>
+                    <th>Command</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- Process data will be populated dynamically -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- System Health Check Card -->
+        <div class="glass-card p-6 rounded-xl mt-8">
+            <h3 class="font-semibold text-lg mb-4">System Health Check</h3>
+            <div id="systemHealth" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <!-- System health details will be shown here -->
+            </div>
+        </div>
+
+        <!-- Socket Client Status Card -->
+        <div class="glass-card p-6 rounded-xl mt-8">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-semibold text-lg">Socket Client Status</h3>
+                <div>
+                    <span id="socketStatusBadge" class="glass-card px-3 py-1 rounded-full text-sm">
+                        <i class="fas fa-circle text-gray-400"></i>
+                        <span>Unknown</span>
+                    </span>
+                </div>
+            </div>
+            <div id="socketClientOutput" class="w-full bg-gray-800 text-green-400 p-4 rounded-lg max-h-40 overflow-y-auto font-mono text-sm">
+                <pre>Socket client output will appear here...</pre>
+            </div>
+        </div>
+
+        <!-- Command Execution -->
+        <div class="glass-card p-6 rounded-xl mt-8">
+            <h3 class="font-semibold text-lg mb-4">Execute Command</h3>
+            <div class="flex space-x-2 mb-2">
+                <button class="quick-command btn glass-card px-3 py-1 rounded-lg text-blue-600 hover:text-blue-800" data-command="ls -la">ls -la</button>
+                <button class="quick-command btn glass-card px-3 py-1 rounded-lg text-blue-600 hover:text-blue-800" data-command="df -h">df -h</button>
+                <button class="quick-command btn glass-card px-3 py-1 rounded-lg text-blue-600 hover:text-blue-800" data-command="free -m">free -m</button>
+                <button class="quick-command btn glass-card px-3 py-1 rounded-lg text-blue-600 hover:text-blue-800" data-command="top -b -n 1">top</button>
+            </div>
+            <textarea id="commandInput" class="glass-card w-full p-2 border rounded-lg" rows="4" placeholder="Enter command..."></textarea>
+            <div class="flex justify-between mt-4">
+                <button id="runCommand" class="btn glass-card px-4 py-2 rounded-lg text-green-600 hover:text-green-800 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+                    Run Command
+                </button>
+                <button id="clearCommand" class="btn glass-card px-4 py-2 rounded-lg text-red-600 hover:text-red-800 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+                    Clear
+                </button>
+            </div>
+            <div class="mt-4">
+                <div class="w-full bg-gray-800 text-green-400 p-4 rounded-lg max-h-64 overflow-y-auto font-mono text-sm">
+                    <pre id="commandOutput">Command output will appear here...</pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- System Alerts -->
+        <div class="glass-card p-6 rounded-xl mt-8">
+            <h3 class="font-semibold text-lg mb-4">System Alerts</h3>
+            <div id="alertsContainer" class="space-y-2">
+                <!-- Alerts will be populated dynamically -->
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Footer -->
+<div th:replace="~{fragments :: footer}"></div>
+
+<!-- Scripts -->
+<div th:replace="~{fragments :: scripts}"></div>
+
+<!-- Page-specific Script -->
+<script th:inline="javascript">
+    $(document).ready(function() {
+        // Initialize DataTable
+        let processTable = $('#processTable').DataTable({
+            "pageLength": 25,
+            "columns": [
+                { data: 'pid' },
+                { data: 'user' },
+                { data: 'cpu' },
+                { data: 'memory' },
+                { data: 'command' },
+                {
+                    data: null,
+                    orderable: false,
+                    render: function(data) {
+                        return `<button class="btn glass-card px-3 py-1 rounded-lg text-red-600 hover:text-red-800 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg flex items-center gap-2"
+                                onclick="killProcess('${data.pid}')">
+                                <i class="fas fa-trash"></i>
+                                <span class="tracking-tight">Kill</span>
+                                </button>`;
+                    }
+                }
+            ],
+            "dom": '<"flex items-center justify-between mb-4"lf>rt<"flex items-center justify-between mt-4"ip>',
+            "language": {
+                "search": "",
+                "searchPlaceholder": "Search processes..."
+            }
+        });
+
+        // Socket Client Status
+        let socketClientRunning = false;
+        let socketStatusCheckInterval;
+
+        // Handle Host Selection
+        $('#hostSelect').change(function() {
+            const host = $(this).val();
+            if (host) {
+                updateSystemInfo(host);
+                updateProcesses(host);
+                updateSystemHealth(host);
+                checkSystemAlerts(host);
+                checkSocketClientStatus(host);
+            }
+        });
+
+        // Refresh Button
+        $('#refreshData').click(function() {
+            const host = $('#hostSelect').val();
+            if (host) {
+                updateSystemInfo(host);
+                updateProcesses(host);
+                updateSystemHealth(host);
+                checkSystemAlerts(host);
+                checkSocketClientStatus(host);
+            }
+        });
+
+        // Auto-refresh every 30 seconds
+        setInterval(function() {
+            const host = $('#hostSelect').val();
+            if (host) {
+                updateSystemInfo(host);
+                updateProcesses(host);
+                updateSystemHealth(host);
+                checkSystemAlerts(host);
+                
+                // Only check socket status if we're not actively polling
+                if (!socketClientRunning) {
+                    checkSocketClientStatus(host);
+                }
+            }
+        }, 30000);
+
+        // Update System Metrics
+        function updateSystemInfo(host) {
+            $.get(`/api/monitor/system/${host}`, function(data) {
+                // Update CPU metrics
+                $('#cpuUser').text(data.cpu.user.toFixed(1));
+                $('#cpuSystem').text(data.cpu.system.toFixed(1));
+                $('#cpuIdle').text(data.cpu.idle.toFixed(1));
+
+                const cpuUsage = (100 - data.cpu.idle).toFixed(1);
+                $('#cpuUsage').text(cpuUsage);
+                $('#cpuProgressBar').css('width', `${cpuUsage}%`);
+
+                // Update color based on usage
+                if (cpuUsage > 80) {
+                    $('#cpuProgressBar').removeClass('bg-blue-600').addClass('bg-red-600');
+                } else if (cpuUsage > 60) {
+                    $('#cpuProgressBar').removeClass('bg-blue-600').addClass('bg-yellow-500');
+                } else {
+                    $('#cpuProgressBar').removeClass('bg-yellow-500 bg-red-600').addClass('bg-blue-600');
+                }
+
+                // Update memory metrics
+                $('#memoryTotal').text(data.memory.total);
+                $('#memoryUsed').text(data.memory.used);
+                $('#memoryFree').text(data.memory.free);
+                $('#memoryUsage').text(data.memory.used);
+
+                const memoryPercentage = ((data.memory.used / data.memory.total) * 100).toFixed(1);
+                $('#memoryProgressBar').css('width', `${memoryPercentage}%`);
+
+                // Update color based on usage
+                if (memoryPercentage > 80) {
+                    $('#memoryProgressBar').removeClass('bg-green-600').addClass('bg-red-600');
+                } else if (memoryPercentage > 60) {
+                    $('#memoryProgressBar').removeClass('bg-green-600').addClass('bg-yellow-500');
+                } else {
+                    $('#memoryProgressBar').removeClass('bg-yellow-500 bg-red-600').addClass('bg-green-600');
+                }
+
+                // Update disk usage
+                const diskHtml = data.disk.map(disk => {
+                    // Extract percentage value as a number
+                    const percentValue = parseFloat(disk.usePercentage.replace('%', ''));
+                    let barColor = 'bg-purple-600';
+
+                    if (percentValue > 90) {
+                        barColor = 'bg-red-600';
+                    } else if (percentValue > 70) {
+                        barColor = 'bg-yellow-500';
+                    }
+
+                    return `
+                        <div class="mb-4">
+                            <div class="flex justify-between font-medium">
+                                <span>${disk.mountPoint}</span>
+                                <span>${disk.usePercentage}</span>
+                            </div>
+                            <div class="text-xs mb-1">
+                                ${disk.used} / ${disk.size}
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                <div class="${barColor} h-2.5 rounded-full" style="width: ${disk.usePercentage}"></div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                $('#diskUsage').html(diskHtml);
+            }).fail(function() {
+                showErrorAlert("Error fetching system info!");
+            });
+        }
+
+        // Update Processes
+        function updateProcesses(host) {
+            $.get(`/api/monitor/processes/${host}`, function(data) {
+                processTable.clear().rows.add(data).draw();
+            }).fail(function() {
+                showErrorAlert("Error fetching processes!");
+            });
+        }
+
+        // Update System Health
+        function updateSystemHealth(host) {
+            $.get(`/api/monitor/health/${host}`, function(data) {
+                // CPU Temperature
+                let cpuTempClass = 'text-green-600';
+                if (data.cpuTemperature > 80) {
+                    cpuTempClass = 'text-red-600';
+                } else if (data.cpuTemperature > 60) {
+                    cpuTempClass = 'text-yellow-500';
+                }
+
+                // Disk Health
+                let diskHealthClass = 'text-green-600';
+                if (data.diskHealth === 'Warning') {
+                    diskHealthClass = 'text-yellow-500';
+                } else if (data.diskHealth === 'Critical') {
+                    diskHealthClass = 'text-red-600';
+                }
+
+                // MySQL Service
+                let mysqlClass = data.mysqlService ? 'text-green-600' : 'text-red-600';
+                let mysqlStatus = data.mysqlService ? 'Running' : 'Not Running';
+
+                // Apache Service
+                let apacheClass = data.apacheService ? 'text-green-600' : 'text-red-600';
+                let apacheStatus = data.apacheService ? 'Running' : 'Not Running';
+
+                let healthHtml = `
+                    <div class="glass-card p-4 rounded-lg">
+                        <div class="text-center">
+                            <div class="font-medium">CPU Temp</div>
+                            <div class="${cpuTempClass} text-xl font-bold">${data.cpuTemperature}°C</div>
+                        </div>
+                    </div>
+                    <div class="glass-card p-4 rounded-lg">
+                        <div class="text-center">
+                            <div class="font-medium">Disk Health</div>
+                            <div class="${diskHealthClass} text-xl font-bold">${data.diskHealth}</div>
+                        </div>
+                    </div>
+                    <div class="glass-card p-4 rounded-lg">
+                        <div class="text-center">
+                            <div class="font-medium">MySQL</div>
+                            <div class="${mysqlClass} text-xl font-bold">${mysqlStatus}</div>
+                        </div>
+                    </div>
+                    <div class="glass-card p-4 rounded-lg">
+                        <div class="text-center">
+                            <div class="font-medium">Apache</div>
+                            <div class="${apacheClass} text-xl font-bold">${apacheStatus}</div>
+                        </div>
+                    </div>
+                `;
+                $('#systemHealth').html(healthHtml);
+            }).fail(function() {
+                $('#systemHealth').text("Error fetching system health info.");
+            });
+        }
+
+        // Check Socket Client Status
+        function checkSocketClientStatus(host) {
+            $.get(`/api/socket/status/${host}`, function(data) {
+                if (data.running) {
+                    $('#socketStatusBadge').html('<i class="fas fa-circle text-green-500"></i> <span>Running</span>');
+                    $('#socketStatusBadge').removeClass('text-gray-400').addClass('text-green-500');
+                    $('#socketClientOutput').html(`<pre>${data.lastOutput || 'No output available'}</pre>`);
+                } else {
+                    $('#socketStatusBadge').html('<i class="fas fa-circle text-gray-400"></i> <span>Inactive</span>');
+                    $('#socketStatusBadge').removeClass('text-green-500').addClass('text-gray-400');
+                }
+            }).fail(function() {
+                $('#socketStatusBadge').html('<i class="fas fa-circle text-red-500"></i> <span>Error</span>');
+                $('#socketStatusBadge').removeClass('text-green-500 text-gray-400').addClass('text-red-500');
+                $('#socketClientOutput').html('<pre>Error checking socket client status</pre>');
+            });
+        }
+
+        // Poll Socket Client Status - called when socket client is running
+        function pollSocketClientStatus(host) {
+            if (socketStatusCheckInterval) {
+                clearInterval(socketStatusCheckInterval);
+            }
+            
+            socketStatusCheckInterval = setInterval(function() {
+                $.get(`/api/socket/status/${host}`, function(data) {
+                    $('#socketClientOutput').html(`<pre>${data.lastOutput || 'No output available'}</pre>`);
+                    
+                    if (!data.running) {
+                        // Socket client has stopped
+                        $('#socketStatusBadge').html('<i class="fas fa-circle text-gray-400"></i> <span>Inactive</span>');
+                        $('#socketStatusBadge').removeClass('text-green-500').addClass('text-gray-400');
+                        socketClientRunning = false;
+                        clearInterval(socketStatusCheckInterval);
+                    }
+                }).fail(function() {
+                    $('#socketStatusBadge').html('<i class="fas fa-circle text-red-500"></i> <span>Error</span>');
+                    $('#socketStatusBadge').removeClass('text-green-500 text-gray-400').addClass('text-red-500');
+                    socketClientRunning = false;
+                    clearInterval(socketStatusCheckInterval);
+                });
+            }, 3000); // Check every 3 seconds
+        }
+
+        // Check System Alerts
+        function checkSystemAlerts(host) {
+            $.get(`/api/monitor/alerts/${host}`, function(data) {
+                $('#alertsContainer').empty();
+                if (data.length === 0) {
+                    $('#alertsContainer').html('<div class="text-sm text-green-600">No active alerts at this time.</div>');
+                    return;
+                }
+
+                data.forEach(alert => {
+                    let alertClass = 'border-yellow-500';
+                    let alertIcon = 'fa-exclamation-triangle text-yellow-500';
+
+                    if (alert.severity === 'critical') {
+                        alertClass = 'border-red-600';
+                        alertIcon = 'fa-exclamation-circle text-red-600';
+                    }
+
+                    const alertHtml = `
+                        <div class="glass-card p-4 border-l-4 ${alertClass}">
+                            <div class="flex items-start">
+                                <div class="mr-4">
+                                    <i class="fas ${alertIcon} text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold">${alert.title}</h4>
+                                    <p class="text-sm">${alert.message}</p>
+                                    <div class="text-xs text-gray-500 mt-1">
+                                        ${new Date(alert.timestamp).toLocaleString()}
+                                    </div>
+                                </div>
+                                <div class="ml-auto">
+                                    <button class="dismiss-alert btn px-2 py-1 text-xs rounded-lg text-gray-600 hover:text-gray-800"
+                                           data-alert-id="${alert.id}">
+                                        Dismiss
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    $('#alertsContainer').append(alertHtml);
+                });
+
+                // Add click handlers for dismiss buttons
+                $('.dismiss-alert').click(function() {
+                    const alertId = $(this).data('alert-id');
+                    dismissAlert(host, alertId);
+                });
+            }).fail(function() {
+                showErrorAlert("Error fetching system alerts!");
+            });
+        }
+
+        // Dismiss Alert
+        function dismissAlert(host, alertId) {
+            $.post(`/api/monitor/dismissAlert/${host}/${alertId}`, function() {
+                checkSystemAlerts(host);
+            }).fail(function() {
+                showErrorAlert("Error dismissing alert!");
+            });
+        }
+
+        // Show Error Alert
+        function showErrorAlert(message) {
+            const alertHtml = `
+                <div class="fixed top-4 right-4 glass-card p-4 border-l-4 border-red-600 animate__animated animate__fadeIn z-50">
+                    <div class="flex items-center">
+                        <i class="fas fa-exclamation-circle text-red-600 mr-2"></i>
+                        <span>${message}</span>
+                        <button class="ml-4 text-gray-500 hover:text-gray-700" onclick="$(this).parent().parent().remove()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+            $('body').append(alertHtml);
+
+            // Auto-remove after 5 seconds
+            setTimeout(function() {
+                $('.fixed.glass-card').first().remove();
+            }, 5000);
+        }
+
+        // Show Success Alert
+        function showSuccessAlert(message) {
+            const alertHtml = `
+                <div class="fixed top-4 right-4 glass-card p-4 border-l-4 border-green-600 animate__animated animate__fadeIn z-50">
+                    <div class="flex items-center">
+                        <i class="fas fa-check-circle text-green-600 mr-2"></i>
+                        <span>${message}</span>
+                        <button class="ml-4 text-gray-500 hover:text-gray-700" onclick="$(this).parent().parent().remove()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+            $('body').append(alertHtml);
+
+            // Auto-remove after 5 seconds
+            setTimeout(function() {
+                $('.fixed.glass-card').first().remove();
+            }, 5000);
+        }
+
+        // Kill Process
+        window.killProcess = function(pid) {
+            const host = $('#hostSelect').val();
+            if (confirm('Are you sure you want to kill this process?')) {
+                $.post(`/api/monitor/kill/${host}/${pid}`, function() {
+                    updateProcesses(host);
+                }).fail(function() {
+                    showErrorAlert("Error killing process!");
+                });
+            }
+        };
+
+        // Run Command
+        $('#runCommand').click(function() {
+            executeCommand();
+        });
+
+        // Clear Command
+        $('#clearCommand').click(function() {
+            $('#commandInput').val('');
+            $('#commandOutput').text('Command output will appear here...');
+        });
+
+        // Quick Commands
+        $('.quick-command').click(function() {
+            const command = $(this).data('command');
+            $('#commandInput').val(command);
+            executeCommand();
+        });
+
+        // Execute Command Function
+        function executeCommand() {
+            const host = $('#hostSelect').val();
+            const command = $('#commandInput').val();
+
+            if (!host) {
+                showErrorAlert("Please select a host first!");
+                return;
+            }
+
+            if (command) {
+                $('#commandOutput').text('Executing command...');
+                $.post(`/api/monitor/executeCommand/${host}`, { command: command }, function(data) {
+                    $('#commandOutput').text(data.output || 'Command completed successfully.');
+                }).fail(function(error) {
+                    $('#commandOutput').text(error.responseJSON?.message || "Error executing command.");
+                });
+            } else {
+                $('#commandOutput').text("Please enter a command.");
+            }
+        }
+
+        // TCA Button Handler
+        $('#startTCA').click(function() {
+            const host = $('#hostSelect').val();
+            if (!host) {
+                showErrorAlert("Please select a host first!");
+                return;
+            }
+
+            $(this).prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Starting...');
+
+            $.ajax({
+                url: '/api/tca/invoke',
+                type: 'POST',
+                data: { host: host },
+                success: function(response) {
+                    showSuccessAlert("TCA process started successfully");
+                },
+                error: function() {
+                    showErrorAlert("Error starting TCA process!");
+                },
+                complete: function() {
+                    $('#startTCA').prop('disabled', false).html('<i class="fas fa-play"></i> <span class="tracking-tight">Start TCA</span>');
+                }
+            });
+        });
+
+        // Socket Client Button Handler
+        $('#runSocketClient').click(function() {
+            const host = $('#hostSelect').val();
+            if (!host) {
+                showErrorAlert("Please select a host first!");
+                return;
+            }
+
+            $(this).prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Running...');
+
+            $.ajax({
+                url: '/api/socket/run',
+                type: 'POST',
+                data: { 
+                    host: host,
+                    params: {
+                        // Add any parameters your socket client script needs
+                        port: 8080,
+                        timeout: 30
+                    }
+                },
+                success: function(response) {
+                    showSuccessAlert("Socket client script started successfully");
+                    socketClientRunning = true;
+                    $('#socketStatusBadge').html('<i class="fas fa-circle text-green-500"></i> <span>Running</span>');
+                    $('#socketStatusBadge').removeClass('text-gray-
+
+$('#socketStatusBadge').removeClass('text-gray-400 text-red-500').addClass('text-green-500');
+                    $('#socketClientOutput').html('<pre>Socket client started, waiting for output...</pre>');
+                    
+                    // Start polling for updates
+                    pollSocketClientStatus(host);
+                },
+                error: function(xhr) {
+                    showErrorAlert(xhr.responseJSON?.message || "Error running socket client script!");
+                },
+                complete: function() {
+                    $('#runSocketClient').prop('disabled', false).html('<i class="fas fa-terminal"></i> <span class="tracking-tight">Run Socket Client</span>');
+                }
+            });
+        });
+
+        // Stop Socket Client Button (Add this if you want to allow manual stopping)
+        $('#stopSocketClient').click(function() {
+            const host = $('#hostSelect').val();
+            if (!host) {
+                showErrorAlert("Please select a host first!");
+                return;
+            }
+
+            $.ajax({
+                url: '/api/socket/stop',
+                type: 'POST',
+                data: { host: host },
+                success: function() {
+                    showSuccessAlert("Socket client stopped successfully");
+                    socketClientRunning = false;
+                    $('#socketStatusBadge').html('<i class="fas fa-circle text-gray-400"></i> <span>Inactive</span>');
+                    $('#socketStatusBadge').removeClass('text-green-500 text-red-500').addClass('text-gray-400');
+                    
+                    // Stop polling
+                    if (socketStatusCheckInterval) {
+                        clearInterval(socketStatusCheckInterval);
+                    }
+                },
+                error: function() {
+                    showErrorAlert("Error stopping socket client!");
+                }
+            });
+        });
+
+        // Allow Enter key to execute command
+        $('#commandInput').on('keypress', function(e) {
+            if (e.which === 13 && !e.shiftKey) {
+                e.preventDefault();
+                executeCommand();
+            }
+        });
+    });
+</script>
