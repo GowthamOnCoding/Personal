@@ -101,7 +101,7 @@
                             <span class="tracking-tight">Start TCA</span>
                         </button>
                     </div>
-                    
+
                     <!-- Run Socket Client Button -->
                     <div>
                         <div class="bg-indigo-100 p-3 rounded-full mb-3 mx-auto w-12 h-12 flex items-center justify-center">
@@ -269,7 +269,7 @@
                 updateProcesses(host);
                 updateSystemHealth(host);
                 checkSystemAlerts(host);
-                
+
                 // Only check socket status if we're not actively polling
                 if (!socketClientRunning) {
                     checkSocketClientStatus(host);
@@ -440,11 +440,11 @@
             if (socketStatusCheckInterval) {
                 clearInterval(socketStatusCheckInterval);
             }
-            
+
             socketStatusCheckInterval = setInterval(function() {
                 $.get(`/api/socket/status/${host}`, function(data) {
                     $('#socketClientOutput').html(`<pre>${data.lastOutput || 'No output available'}</pre>`);
-                    
+
                     if (!data.running) {
                         // Socket client has stopped
                         $('#socketStatusBadge').html('<i class="fas fa-circle text-gray-400"></i> <span>Inactive</span>');
@@ -656,7 +656,7 @@
             $.ajax({
                 url: '/api/socket/run',
                 type: 'POST',
-                data: { 
+                data: {
                     host: host,
                     params: {
                         // Add any parameters your socket client script needs
@@ -668,11 +668,9 @@
                     showSuccessAlert("Socket client script started successfully");
                     socketClientRunning = true;
                     $('#socketStatusBadge').html('<i class="fas fa-circle text-green-500"></i> <span>Running</span>');
-                    $('#socketStatusBadge').removeClass('text-gray-
-
-$('#socketStatusBadge').removeClass('text-gray-400 text-red-500').addClass('text-green-500');
+                    $('#socketStatusBadge').removeClass('text-gray-400 text-red-500').addClass('text-green-500');
                     $('#socketClientOutput').html('<pre>Socket client started, waiting for output...</pre>');
-                    
+
                     // Start polling for updates
                     pollSocketClientStatus(host);
                 },
@@ -685,7 +683,7 @@ $('#socketStatusBadge').removeClass('text-gray-400 text-red-500').addClass('text
             });
         });
 
-        // Stop Socket Client Button (Add this if you want to allow manual stopping)
+        // Stop Socket Client Button
         $('#stopSocketClient').click(function() {
             const host = $('#hostSelect').val();
             if (!host) {
@@ -702,7 +700,7 @@ $('#socketStatusBadge').removeClass('text-gray-400 text-red-500').addClass('text
                     socketClientRunning = false;
                     $('#socketStatusBadge').html('<i class="fas fa-circle text-gray-400"></i> <span>Inactive</span>');
                     $('#socketStatusBadge').removeClass('text-green-500 text-red-500').addClass('text-gray-400');
-                    
+
                     // Stop polling
                     if (socketStatusCheckInterval) {
                         clearInterval(socketStatusCheckInterval);
@@ -723,3 +721,5 @@ $('#socketStatusBadge').removeClass('text-gray-400 text-red-500').addClass('text
         });
     });
 </script>
+</body>
+</html>
