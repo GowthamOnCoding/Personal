@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Execution Dashboard</title>
+
+    <!-- TailwindCSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+
+    <!-- Optional: Toastify for notifications -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen p-4">
+    <div class="container mx-auto">
+        <div class="flex justify-between items-center mb-4">
+            <h1 class="text-3xl font-bold text-gray-700">Test Case Execution Dashboard</h1>
+            <button id="refreshBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded">
+                Refresh
+            </button>
+        </div>
+
+        <!-- Loading Spinner -->
+        <div id="loadingSpinner" class="flex justify-center items-center h-40 hidden">
+            <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500"></div>
+        </div>
+
+        <!-- DataTable -->
+        <div class="bg-white rounded-lg shadow-lg p-4 overflow-x-auto">
+            <table id="executionTable" class="stripe hover w-full rounded-lg overflow-hidden">
+                <thead class="bg-gray-200">
+                    <tr>
+                        <th>Execution ID</th>
+                        <th>Test Case</th>
+                        <th>Status</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>Duration</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="execution : ${executions}"
+                        th:classappend="${execution.status} == 'Passed' ? 'bg-green-50' : (${execution.status} == 'Failed' ? 'bg-red-50' : '')">
+                        <td th:text="${execution.id}">1</td>
+                        <td th:text="${execution.testCaseName}">Login Test</td>
+                        <td th:text="${execution.status}">Passed</td>
+                        <td th:text="${execution.startTime}">2025-04-27 10:00</td>
+                        <td th:text="${execution.endTime}">2025-04-27 10:05</td>
+                        <td th:text="${execution.duration}">5 min</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            const table = $('#executionTable').DataTable({
+                responsive: true,
+                autoWidth: false,
+                initComplete: function() {
+                    $('#loadingSpinner').hide();
+                    $('#executionTable').fadeIn();
+                }
+            });
+
+            $('#refreshBtn').click(function() {
+                $('#loadingSpinner').show();
+                $('#executionTable').hide();
+
+                setTimeout(function() {
+                    table.ajax.reload(null, false); // Optional: Replace with actual AJAX reload if you have it
+                    $('#loadingSpinner').hide();
+                    $('#executionTable').fadeIn();
+
+                    Toastify({
+                        text: "Data refreshed successfully!",
+                        backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+                        duration: 2000
+                    }).showToast();
+                }, 1000); // Simulate refresh delay
+            });
+        });
+    </script>
+</body>
+</html>
