@@ -1,0 +1,27 @@
+SELECT 
+    s.name AS SchemaName,
+    t.name AS TableName,
+    SUM(p.rows) AS TotalRows
+FROM 
+    sys.tables t
+    INNER JOIN sys.schemas s ON t.schema_id = s.schema_id
+    INNER JOIN sys.partitions p ON t.object_id = p.object_id
+WHERE 
+    p.index_id IN (0,1) -- 0 = heap, 1 = clustered index
+    AND s.name = 'YourSchemaName' -- Replace with your schema name
+GROUP BY 
+    s.name, t.name
+ORDER BY 
+    TotalRows DESC;
+
+
+
+SELECT 
+    SUM(p.rows) AS TotalRowCount
+FROM 
+    sys.tables t
+    INNER JOIN sys.schemas s ON t.schema_id = s.schema_id
+    INNER JOIN sys.partitions p ON t.object_id = p.object_id
+WHERE 
+    p.index_id IN (0,1)
+    AND s.name = 'YourSchemaName'; -- Replace with your schema name
