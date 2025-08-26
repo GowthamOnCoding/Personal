@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Understanding and Overcoming Health Anxiety</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #e8f4f8 0%, #f0f8ff 100%);
+            color: #2c3e50;
+        }
+        
+        .presentation-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .slide {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            margin: 30px 0;
+            padding: 40px;
+            min-height: 600px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #a8e6cf, #88d8c0, #7fcdcd);
+        }
+        
+        .slide-number {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: #a8e6cf;
+            color: #2c3e50;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        h1 {
+            color: #2c5f73;
+            font-size: 2.8em;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+        
+        h2 {
+            color: #34495e;
+            font-size: 2.2em;
+            margin-bottom: 25px;
+            font-weight: 400;
+            border-bottom: 3px solid #a8e6cf;
+            padding-bottom: 10px;
+        }
+        
+        h3 {
+            color: #2c5f73;
+            font-size: 1.5em;
+            margin: 20px 0 15px 0;
+        }
+        
+        .subtitle {
+            text-align: center;
+            font-size: 1.2em;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+        }
+        
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            align-items: start;
+            flex: 1;
+        }
+        
+        .content-full {
+            flex: 1;
+        }
+        
+        .visual-box {
+            background: linear-gradient(135deg, #f8f9ff, #e8f4f8);
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 5px solid #88d8c0;
+            margin: 20px 0;
+        }
+        
+        .brain-diagram {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+            background: radial-gradient(circle, #f0f8ff, #e8f4f8);
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+        
+        .brain {
+            width: 120px;
+            height: 90px;
+            background: #ff9aa2;
+            border-radius: 60px 60px 40px 40px;
+            position: relative;
+            margin: 0 30px;
+        }
+        
+        .brain::before {
+            content: '🧠';
+            font-size: 60px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .arrow {
+            font-size: 30px;
+            color: #88d8c0;
+            animation: pulse 2s infinite;
+        }
+        
+        .body-outline {
+            width: 80px;
+            height: 120px;
+            background: #b5ead7;
+            border-radius: 40px 40px 10px 10px;
+            position: relative;
+        }
+        
+        .body-outline::before {
+            content: '♡';
+            font-size: 40px;
+            color: #ff6b9d;
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        
+        .anxiety-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .anxiety-card {
+            background: linear-gradient(135deg, #ffeaa7, #fab1a0);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .anxiety-card h4 {
+            color: #2d3436;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        
+        .story-box {
+            background: linear-gradient(135deg, #dda0dd, #e6e6fa);
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 5px solid #9370db;
+            margin: 20px 0;
+            font-style: italic;
+        }
+        
+        .cycle-diagram {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 30px 0;
+            position: relative;
+            height: 300px;
+        }
+        
+        .cycle-step {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+            position: absolute;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        .step1 { background: #ff6b9d; top: 0; left: 50%; transform: translateX(-50%); }
+        .step2 { background: #4ecdc4; top: 30%; right: 0; }
+        .step3 { background: #45b7d1; bottom: 30%; right: 0; }
+        .step4 { background: #96ceb4; bottom: 0; left: 50%; transform: translateX(-50%); }
+        .step5 { background: #ffeaa7; bottom: 30%; left: 0; }
+        .step6 { background: #dda0dd; top: 30%; left: 0; }
+        
+        .cycle-arrow {
+            position: absolute;
+            font-size: 24px;
+            color: #7f8c8d;
+            animation: rotate 4s linear infinite;
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .fight-flight {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .response-box {
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .fight-box {
+            background: linear-gradient(135deg, #ff7979, #fdcb6e);
+            color: white;
+        }
+        
+        .flight-box {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+        }
+        
+        .symptoms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .symptom-item {
+            background: linear-gradient(135deg, #fef9e7, #fcf4dd);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #f39c12;
+            display: flex;
+            align-items: center;
+        }
+        
+        .symptom-item::before {
+            content: '✓';
+            color: #27ae60;
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 18px;
+        }
+        
+        .cbt-triangle {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 30px 0;
+            position: relative;
+            height: 250px;
+        }
+        
+        .cbt-point {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+            position: absolute;
+        }
+        
+        .thoughts { background: #e17055; top: 0; left: 50%; transform: translateX(-50%); }
+        .feelings { background: #00b894; bottom: 0; left: 20%; }
+        .behaviors { background: #6c5ce7; bottom: 0; right: 20%; }
+        
+        .speaker-notes {
+            background: #f8f9fa;
+            border-left: 4px solid #17a2b8;
+            padding: 15px;
+            margin-top: 30px;
+            border-radius: 0 8px 8px 0;
+            font-size: 14px;
+            color: #495057;
+        }
+        
+        .speaker-notes h4 {
+            color: #17a2b8;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        
+        .navigation {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(168, 230, 207, 0.9);
+            padding: 10px;
+            border-radius: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .nav-btn {
+            background: #2c5f73;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            margin: 0 5px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .nav-btn:hover {
+            background: #34495e;
+        }
+        
+        .hope-message {
+            text-align: center;
+            font-size: 1.3em;
+            color: #2c5f73;
+            background: linear-gradient(135deg, #a8e6cf, #88d8c0);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        ul, ol {
+            line-height: 1.8;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        .highlight {
+            background: linear-gradient(120deg, #a8e6cf 0%, #a8e6cf 100%);
+            background-repeat: no-repeat;
+            background-size: 100% 0.2em;
+            background-position: 0 88%;
+            padding: 2px 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        
+        <!-- Slide 1: Title Slide -->
+        <div class="slide" id="slide1">
+            <div class="slide-number">1/10</div>
+            <div class="content-full">
+                <h1>Understanding and Overcoming Health Anxiety</h1>
+                <p class="subtitle">A Guide to Recognizing, Understanding, and Managing Health-Related Worries</p>
+                <div class="visual-box" style="text-align: center; margin-top: 50px;">
+                    <div style="font-size: 80px; margin-bottom: 20px;">🧠💚</div>
+                    <p style="font-size: 1.2em; color: #2c5f73;">Taking Control of Your Mental Wellness Journey</p>
+                </div>
+                <div style="text-align: center; margin-top: 40px; color: #7f8c8d;">
+                    <p>Presented for Students and Young Professionals</p>
+                </div>
+            </div>
+            <div class="speaker-notes">
+                <h4>Speaker Notes:</h4>
+                <p>Welcome everyone to this presentation on health anxiety. This is a common experience that affects many people, especially in our current information-rich environment. Today we'll explore what health anxiety is, why it happens, and most importantly, practical strategies to manage it. Remember, seeking help for anxiety is a sign of strength, not weakness.</p>
+            </div>
+        </div>
+
+        <!-- Slide 2: What is Anxiety -->
+        <div class="slide" id="slide2">
+            <div class="slide-number">2/10</div>
+            <h2>What is Anxiety?</h2>
+            <div class="content-grid">
+                <div>
+                    <h3>The Brain-Body Connection</h3>
+                    <p>Anxiety is your body's natural alarm system, designed to keep you safe from danger.</p>
+                    <ul>
+                        <li><strong>Brain:</strong> Detects potential threats</li>
+                        <li><strong>Body:</strong> Prepares for action</li>
+                        <li><strong>Purpose:</strong> Survival mechanism</li>
+                    </ul>
+                    <div class="visual-box">
+                        <p><span class="highlight">Normal anxiety</span> helps us stay alert and perform better. <span class="highlight">Excessive anxiety</span> can interfere with daily life.</p>
+                    </div>
+                </div>
+                <div>
+                    <div class="brain-diagram">
+                        <div class="brain"></div>
+                        <div class="arrow">→</div>
+                        <div class="body-outline"></div>
+                    </div>
+                    <p style="text-align: center; font-size: 14px; color: #7f8c8d;">Brain signals body to prepare for action</p>
+                </div>
+            </div>
+            <div class="speaker-notes">
+                <h4>Speaker Notes:</h4>
+                <p>Start by normalizing anxiety - it's a universal human experience. Explain that anxiety becomes problematic when it's disproportionate to the actual threat or interferes with daily functioning. Use relatable examples like feeling nervous before an exam (normal) vs. being unable to sleep for weeks due to health worries (excessive).</p>
+            </div>
+        </div>
+
+        <!-- Slide 3: Types of Anxiety Disorders -->
+        <div class="slide" id="slide3">
+            <div class="slide-number">3/10</div>
+            <h2>Common Types of Anxiety Disorders</h2>
+            <div class="anxiety-types">
+                <div class="anxiety-card">
+                    <h4>🌍 Generalized Anxiety</h4>
+                    <p>Excessive worry about everyday situations</p>
+                </div>
+                <div class="anxiety-card">
+                    <h4>😰 Panic Disorder</h4>
+                    <p>Sudden, intense episodes of fear</p>
+                </div>
+                <div class="anxiety-card">
+                    <h4>👥 Social Anxiety</h4>
+                    <p>Fear of social situations and judgment</p>
+                </div>
+                <div class="anxiety-card">
+                    <h4>🏥 Health Anxiety</h4>
+                    <p>Excessive worry about health and illness</p>
+                </div>
+                <div class="anxiety-card">
+                    <h4>🕷️ Specific Phobias</h4>
+                    <p>Intense fear of specific objects/situations</p>
+                </div>
+                <div class="anxiety-card">
+                    <h4>🔄 OCD</h4>
+                    <p>Repetitive thoughts and compulsive behaviors</p>
+                </div>
+            </div>
+            <div class="visual-box">
+                <p><strong>Remember:</strong> Many people experience multiple types of anxiety, and that's completely normal. Today we're focusing specifically on health anxiety.</p>
+            </div>
+            <div class="speaker-notes">
+                <h4>Speaker Notes:</h4>
+                <p>Briefly explain each type without going into too much detail. Emphasize that these often overlap and that having anxiety doesn't define a person. Mention that professional help is available for all types. Transition by noting that health anxiety has become increasingly common, especially with easy access to medical information online.</p>
+            </div>
+        </div>
+
+        <!-- Slide 4: Health Anxiety Specifically -->
+        <div class="slide" id="slide4">
+            <div class="slide-number">4/10</div>
+            <h2>Health Anxiety: A Closer Look</h2>
+            <div class="content-grid">
+                <div>
+                    <h3>What is Health Anxiety?</h3>
+                    <p>Persistent worry about having or developing a serious illness, despite medical reassurance.</p>
+                    
+                    <h3>Key Characteristics:</h3>
+                    <ul>
+                        <li>Excessive focus on body sensations</li>
+                        <li>Frequent self-checking behaviors</li>
+                        <li>Seeking constant medical reassurance</li>
+                        <li>Avoiding health-related information or medical care</li>
+                        <li>Misinterpreting normal body sensations</li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="visual-box">
+                        <h3>📊 By the Numbers</h3>
+                        <ul style="list-style: none; padding: 0;">
+                            <li>🔹 Affects 3-12% of population</li>
+                            <li>🔹 Often begins in early adulthood</li>
+                            <li>🔹 Equally affects all genders</li>
+                            <li>🔹 Can be triggered by life events</li>
+                        </ul>
+                    </div>
+                    <div class="visual-box" style="margin-top: 20px;">
+                        <h3>💡 Important Note</h3>
+                        <p>Health anxiety is <strong>not</strong> "just worrying" - it's a real condition that can significantly impact quality of life.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="speaker-notes">
+                <h4>Speaker Notes:</h4>
+                <p>Validate the audience's experiences - many people have felt health anxiety, especially during times of stress or after hearing about illness. Distinguish between normal health concerns (which everyone has) and persistent, intrusive worries that interfere with daily life. Mention that in our digital age, "Dr. Google" often amplifies these concerns.</p>
+            </div>
+        </div>
+
+        <!-- Slide 5: How It Starts - Real Life Example -->
+        <div class="slide" id="slide5">
+            <div class="slide-number">5/10</div>
+            <h2>How Health Anxiety Starts: Sarah's Story</h2>
+            <div class="story-box">
+                <h3>📖 A Real-Life Example</h3>
+                <p><strong>Sarah, 22, College Student:</strong></p>
+                <p>"It started during finals week. I felt my heart racing while studying and immediately thought 'heart attack.' Even though I'm young and healthy, I couldn't shake the fear. I started checking my pulse constantly, researching heart conditions online, and visiting the campus health center weekly. The more I searched, the more convinced I became that something was seriously wrong. Sleep became impossible, and I couldn't concentrate on anything except my health fears."</p>
+            </div>
+            
+            <div class="content-grid">
+                <div>
+                    <h3>⚡ Common Triggers</h3>
+                    <ul>
+                        <li>Stress (exams, work, relationships)</li>
+                        <li>Normal body sensations during stress</li>
+                        <li>Health information online or in media</li>
+                        <li>Friend or family member becoming ill</li>
+                        <li>Life transitions or changes</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>🔄 The Escalation Pattern</h3>
+                    <ol>
+                        <li>Notice body sensation</li>
+                        <li>Worry about what it means</li>
+                        <li>Search for information online</li>
+                        <li>Find scary possibilities</li>
+                        <li>Anxiety increases</li>
+                        <li>Body sensations worsen</li>
+                        <li>Cycle repeats and intensifies</li>
+                    </ol>
+                </div>
+            </div>
+            <div class="speaker-notes">
+                <h4>Speaker Notes:</h4>
+                <p>Use Sarah's story to show how health anxiety can develop gradually from normal stress responses. Emphasize that Sarah's initial heart racing was likely due to caffeine, stress, or lack of sleep - completely normal during finals. Point out how the internet search reinforced her fears rather than reassured her. Ask if anyone can relate to this pattern of escalation.</p>
+            </div>
+        </div>
+
+        <!-- Slide 6: The Anxiety Cycle -->
+        <div class="slide" id="slide6">
+            <div class="slide-number">6/10</div>
+            <h2>The Anxiety Cycle</h2>
+            <div class="content-full">
+                <p style="text-align: center; font-size: 1.1em; margin-bottom: 30px;">Understanding this cycle is key to breaking free from health anxiety</p>
+                
+                <div class="cycle-diagram">
+                    <div class="cycle-step step1">Trigger<br>(Body sensation)</div>
+                    <div class="cycle-step step2">Negative<br>Thoughts</div>
+                    <div class="cycle-step step3">Physical<br>Symptoms</div>
+                    <div class="cycle-step step4">Checking<br>Behaviors</div>
+                    <div class="cycle-step step5">Temporary<br>Relief</div>
+                    <div class="cycle-step step6">Increased<br>Vigilance</div>
+                    <div class="cycle-arrow">🔄</div>
+                </div>
+                
+                <div class="visual-box" style="margin-top: 30px;">
+                    <h3>💡 Breaking the Cycle</h3>
+                    <p>The good news: You can interrupt this cycle at any point! We'll explore specific techniques in the following slides.</p>
+                </div>
+            </div>
+            <div class="speaker-notes">
+                <h4>Speaker Notes:</h4>
+                <p>Walk through each step of the cycle using Sarah's example: trigger (heart racing), negative thoughts (heart attack), physical symptoms (more racing, sweating), checking (pulse, online research), temporary relief (normal pulse), increased vigilance (constantly monitoring heart). Explain that each behavior meant to reduce anxiety actually feeds it. This visual helps people see that anxiety is predictable and therefore manageable.</p>
+            </div>
+        </div>
+
+        <!-- Slide 7: Fight or Flight Response -->
+        <div class="slide" id="slide7">
+            <div class="slide-number">7/10</div>
+            <h2>The Fight or Flight Response</h2>
+            <div class="content-full">
+                <p style="text-align: center; margin-bottom: 30px;">Your body's ancient survival system in the modern world</p>
+                
+                <div class="fight-flight">
+                    <div class="response-box fight-box">
+                        <h3>⚔️ FIGHT Response</h3>
+                        <ul>
+                            <li>Muscle tension</li>
+                            <li>Clenched jaw/fists</li>
+                            <li>Anger or irritability</li>
+                            <li>Feeling "on edge"</li>
+                            <li>Need to take action</li>
+                        </ul>
+                    </div>
+                    <div class="response-box flight-box">
+                        <h3>🏃‍♀️ FLIGHT Response</h3>
+                        <ul>
+                            <li>Rapid heartbeat</li>
+                            <li>Sweating</li>
+                            <li>Shallow breathing</li>
+                            <li>Dizziness</li>
+                            <li>Urge to escape</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="visual-box">
+                    <h3>🧠 What's Happening in Your Body:</h3>
+                    <div class="content-grid">
+                        <div>
+                            <p><strong>Stress Hormones:</strong> Adrenaline and cortisol flood your system</p>
+                            <p><strong>Heart Rate:</strong> Increases to pump blood to muscles</p>
+                            <p><strong>Breathing:</strong> Becomes rapid to get more oxygen</p>
+                        </div>
+                        <div>
+                            <p><strong>Muscles:</strong> Tense up, ready for action</p>
+                            <p><strong>Digestion:</strong> Slows down (not needed for survival)</p>
+                            <p><strong>Focus:</strong> Narrows to perceived threat</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="visual-box" style="background: linear-gradient(135deg, #ffe8e8, #ffd3d3);">
+                    <p><strong>The Problem:</strong> Your brain can't tell the difference between a real tiger and the fear of having a serious illness. The response is the same!</p>
+                </div>
+            </div>
+            <div class="speaker-notes">
+                <h4>Speaker Notes:</h4>
+                <p>Explain that these physical sensations are not dangerous - they're your body trying to protect you. In health anxiety, people often misinterpret these normal stress responses as signs of illness, which creates more anxiety. Give the example: racing heart from anxiety gets interpreted as heart problems, which causes more anxiety and more racing heart. Emphasize that understanding this can be incredibly reassuring.</p>
+            </div>
+        </div>
+
+        <!-- Slide 8: Symptoms Checklist -->
+        <div class="slide" id="slide8">
+            <div class="slide-number">8/10</div>
+            <h2>Health Anxiety Symptoms Checklist</h2>
+            <div class="content-full">
+                <h3>🧠 Mental/Emotional Symptoms</h3>
+                <div class="symptoms-grid">
+                    <div class="symptom-item">Persistent worry about illness</div>
+                    <div class="symptom-item">Fear of specific diseases</div>
+                    <div class="symptom-item">Catastrophic thinking</div>
+                    <div class="symptom-item">Difficulty concentrating</div>
+                    <div class="symptom-item">Constant health monitoring</div>
+                    <div class="symptom-item">Need for reassurance</div>
+                </div>
+                
+                <h3>💪 Physical Symptoms</h3>
+                <div class="symptoms-grid">
+                    <div class="symptom-item">Rapid heartbeat</div>
+                    <div class="symptom-item">Muscle tension</div>
+                    <div class="symptom-item">Sweating or chills</div>
+                    <div class="symptom-item">Digestive issues</div>
+                    <div class="symptom-item">Sleep problems</div>
+                    <div class="symptom-item">Fatigue</div>
+                </div>
+                
+                <h3>🎯 Behavioral Symptoms</h3>
+                <div class="symptoms-grid">
+                    <div class="symptom-item">Frequent doctor visits</div>
+                    <div class="symptom-item">Excessive online health searches</div>
+                    <div class="symptom-item">Body checking behaviors</div>
+                    <div class="symptom-item">Avoidance of health information</div>
+                    <div class="symptom-item">Seeking multiple medical opinions</div>
+                    <div class="symptom-item">Social withdrawal</div>
+                </div>
+            </div>
+            <div class="speaker-notes">
+                <h4>Speaker Notes:</h4>
+                <p>Mention that experiencing some of these symptoms doesn't automatically mean someone has health anxiety - context and severity matter. However, if several symptoms persist and interfere with daily life, it may be worth discussing with a healthcare professional. Validate that these symptoms are real and distressing, not "all in their head."</p>
+            </div>
+        </div>
+
+        <!-- Slide 9: Coping Mechanisms -->
+        <div class="slide" id="slide9">
+            <div class="slide-number">9/10</div>
+            <h2>Effective Coping Strategies</h2>
+            <div class="content-full">
+                <h3>🧠 Cognitive Behavioral Techniques (CBT)</h3>
+                <div class="cbt-triangle">
+                    <div class="cbt-point thoughts">THOUGHTS<br>"I'm having a heart attack"</div>
+                    <div class="cbt-point feelings">FEELINGS<br>Fear, Panic</div>
+                    <div class="cbt-point behaviors">BEHAVIORS<br>Check pulse, Google symptoms</div>
+                </div>
+                
+                <div class="content-grid">
+                    <div>
+                        <h3>🎯 Practical Techniques</h3>
+                        <ul>
+                            <li><strong>Thought Challenging:</strong> "Is this thought realistic? What evidence do I have?"</li>
+                            <li><strong>Breathing Exercises:</strong> 4-7-8 technique (inhale 4, hold 7, exhale 8)</li>
+                            <li><strong>Grounding:</strong> 5-4-3-2-1 method (5 things you see, 4 you hear, etc.)</li>
+                            <li><strong>Journaling:</strong> Track thoughts, feelings, and triggers</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3>🌱 Lifestyle Changes</h3>
+                        <ul>
+                            <li><strong>Regular Exercise:</strong> Reduces stress hormones naturally</li>
+                            <li><strong>Sleep Hygiene:</strong> 7-9 hours, consistent schedule</li>
+                            <li><strong>Limit Caffeine:</strong> Can mimic anxiety symptoms</li>
+                            <li><strong>Mindfulness/Meditation:</strong> 10 minutes daily</li>
+                            <li><strong>Social Support:</strong> Connect with friends and family</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="visual-box">
+                    <h3>🏥 Professional Help Options</h3>
+                    <p><strong>Therapy:</strong> CBT, ACT (Acceptance and Commitment Therapy), or EMDR</p>
+                    <p><strong>Support Groups:</strong> Connect with others who understand</p>
+                    <p><strong>Medication:</strong> Sometimes helpful alongside therapy (consult healthcare provider)</p>
+                    <p><strong>Campus/Employee Resources:</strong> Often free or low-cost counseling available</p>
+                </div>
+            </div>
+            <div class="speaker-notes">
+                <h4>Speaker Notes:</h4>
+                <p>Emphasize that recovery is possible and that different strategies work for different people. The CBT triangle shows how changing one element (thoughts, feelings, or behaviors) can impact the others. Stress that professional help is not a sign of weakness - it's like getting help for any other health condition. Mention that many successful people have worked through anxiety with professional support.</p>
+            </div>
+        </div>
+
+        <!-- Slide 10: Hope & Q&A -->
+        <div class="slide" id="slide10">
+            <div class="slide-number">10/10</div>
+            <h2>Your Path Forward</h2>
+            <div class="content-full">
+                <div class="hope-message">
+                    <h3>🌟 Remember: You Are Not Alone</h3>
+                    <p>Health anxiety is treatable. With the right tools and support, you can learn to manage these worries and live a full, meaningful life.</p>
+                </div>
+                
+                <div class="content-grid">
+                    <div>
+                        <h3>📝 Your Action Steps</h3>
+                        <ol>
+                            <li><strong>Start Small:</strong> Practice one breathing technique today</li>
+                            <li><strong>Track Patterns:</strong> Notice your triggers for one week</li>
+                            <li><strong>Limit "Dr. Google":</strong> Set boundaries on health searches</li>
+                            <li><strong>Build Support:</strong> Talk to one trusted person</li>
+                            <li><strong>Seek Help:</strong> If symptoms persist, reach out to a professional</li>
+                        </ol>
+                        
+                        <div class="visual-box">
+                            <h3>📞 Crisis Resources</h3>
+                            <p><strong>Crisis Text Line:</strong> Text HOME to 741741</p>
+                            <p><strong>National Suicide Prevention Lifeline:</strong> 988</p>
+                            <p><strong>Campus Counseling:</strong> Check your student services</p>
+                        </div>
+                    </div>
+                    <div>
+                        <h3>❓ Questions & Discussion</h3>
+                        <div class="visual-box">
+                            <p><strong>Common Questions:</strong></p>
+                            <ul>
+                                <li>How do I know if my health concerns are "normal"?</li>
+                                <li>What if I actually do have something wrong?</li>
+                                <li>How long does it take to feel better?</li>
+                                <li>Can health anxiety come back?</li>
+                                <li>How do I explain this to family/friends?</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="visual-box" style="background: linear-gradient(135deg, #e8f8f5, #d5f4e6);">
+                            <p><strong>Final Thought:</strong> Recovery isn't about never having health concerns again - it's about responding to them in a balanced, healthy way.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 40px; font-size: 1.2em; color: #2c5f73;">
+                    <p>💚 <em>Thank you for taking this important step in understanding your mental health!</em> 💚</p>
+                </div>
+            </div>
+            <div class="speaker-notes">
+                <h4>Speaker Notes:</h4>
+                <p>End on an encouraging note - emphasize that seeking information about mental health is already a positive step. Address common concerns: validate that it's normal to worry about health, but there's a difference between reasonable concern and debilitating anxiety. Recovery timeline varies but many people see improvement within weeks to months with proper support. Encourage questions and create a safe space for sharing. Remind everyone that resources are available and that taking care of mental health is just as important as physical health.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" onclick="previousSlide()">← Previous</button>
+        <span id="slideCounter">1 of 10</span>
+        <button class="nav-btn" onclick="nextSlide()">Next →</button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 10;
+
+        function showSlide(n) {
+            // Hide all slides
+            for (let i = 1; i <= totalSlides; i++) {
+                document.getElementById(`slide${i}`).style.display = 'none';
+            }
+            
+            // Show current slide
+            document.getElementById(`slide${n}`).style.display = 'block';
+            document.getElementById('slideCounter').textContent = `${n} of ${totalSlides}`;
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                showSlide(currentSlide);
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                showSlide(currentSlide);
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                previousSlide();
+            }
+        });
+
+        // Initialize - show only first slide
+        showSlide(1);
+    </script>
+</body>
+  </html>
