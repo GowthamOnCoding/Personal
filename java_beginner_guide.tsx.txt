@@ -1,0 +1,673 @@
+import React, { useState } from 'react';
+import { Book, Play, Coffee, Box, Users, Lightbulb, Code, CheckCircle } from 'lucide-react';
+
+const JavaGuide = () => {
+  const [activeSection, setActiveSection] = useState(0);
+  const [expandedConcept, setExpandedConcept] = useState(null);
+
+  const sections = [
+    {
+      id: 0,
+      title: "What is Java?",
+      icon: Coffee,
+      content: {
+        analogy: "Think of Java as a universal language that computers around the world understand. Just like English helps people from different countries communicate, Java helps programs run on any computer - whether it's Windows, Mac, or Linux!",
+        visual: "coffee-intro",
+        keyPoints: [
+          "Java is a programming language created in 1995",
+          "Write once, run anywhere (WORA)",
+          "Used for websites, mobile apps, games, and more",
+          "One of the most popular languages in the world"
+        ],
+        code: `// Your first Java program
+public class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello, World!");
+    }
+}`
+      }
+    },
+    {
+      id: 1,
+      title: "Variables & Data Types",
+      icon: Box,
+      content: {
+        analogy: "Variables are like labeled boxes where you store different things. Just like you need different sized boxes for shoes, books, or toys, Java has different data types for numbers, text, and more!",
+        visual: "variables",
+        keyPoints: [
+          "Variables store data in your program",
+          "Each variable has a type (int, String, boolean, etc.)",
+          "Must declare before using",
+          "Java is 'strongly typed' - types matter!"
+        ],
+        code: `// Different types of variables
+int age = 25;              // Whole numbers
+double price = 19.99;      // Decimal numbers
+String name = "John";      // Text
+boolean isStudent = true;  // True or false
+char grade = 'A';          // Single character
+
+// Using variables
+System.out.println("Name: " + name);
+System.out.println("Age: " + age);
+System.out.println("Price: $" + price);`
+      }
+    },
+    {
+      id: 2,
+      title: "Operators",
+      icon: Code,
+      content: {
+        analogy: "Operators are like the mathematical symbols you learned in school (+, -, ×, ÷), but Java has even more! They help you perform operations on your data.",
+        visual: "operators",
+        keyPoints: [
+          "Arithmetic: +, -, *, /, % (remainder)",
+          "Comparison: ==, !=, <, >, <=, >=",
+          "Logical: && (and), || (or), ! (not)",
+          "Assignment: =, +=, -=, *=, /="
+        ],
+        code: `// Arithmetic operators
+int a = 10;
+int b = 3;
+System.out.println("Sum: " + (a + b));        // 13
+System.out.println("Difference: " + (a - b)); // 7
+System.out.println("Product: " + (a * b));    // 30
+System.out.println("Division: " + (a / b));   // 3
+System.out.println("Remainder: " + (a % b));  // 1
+
+// Comparison operators
+System.out.println(a > b);   // true
+System.out.println(a == b);  // false
+
+// Logical operators
+boolean hasLicense = true;
+int age = 20;
+boolean canDrive = hasLicense && (age >= 18);
+System.out.println("Can drive: " + canDrive); // true`
+      }
+    },
+    {
+      id: 3,
+      title: "Control Flow: If-Else",
+      icon: Lightbulb,
+      content: {
+        analogy: "If-else statements are like making decisions in real life. 'If it's raining, take an umbrella, else wear sunglasses.' Your program makes choices based on conditions!",
+        visual: "control-flow",
+        keyPoints: [
+          "If statements check conditions",
+          "Code runs only if condition is true",
+          "Else provides an alternative path",
+          "Can chain with else-if for multiple conditions"
+        ],
+        code: `// Simple if-else
+int temperature = 25;
+
+if (temperature > 30) {
+    System.out.println("It's hot outside!");
+} else if (temperature > 20) {
+    System.out.println("Nice weather!");
+} else {
+    System.out.println("It's cold!");
+}
+
+// Real-world example: Grade calculator
+int score = 85;
+char grade;
+
+if (score >= 90) {
+    grade = 'A';
+} else if (score >= 80) {
+    grade = 'B';
+} else if (score >= 70) {
+    grade = 'C';
+} else {
+    grade = 'F';
+}
+System.out.println("Your grade: " + grade);`
+      }
+    },
+    {
+      id: 4,
+      title: "Loops",
+      icon: Play,
+      content: {
+        analogy: "Loops are like doing repetitive tasks. Instead of writing 'wash dish' 10 times, you say 'wash dishes while there are dishes left.' Loops help you repeat code efficiently!",
+        visual: "loops",
+        keyPoints: [
+          "For loop: when you know how many times to repeat",
+          "While loop: repeat while condition is true",
+          "Do-while: execute at least once, then check condition",
+          "Break and continue control loop execution"
+        ],
+        code: `// For loop - count from 1 to 5
+for (int i = 1; i <= 5; i++) {
+    System.out.println("Count: " + i);
+}
+
+// While loop - keep asking until correct
+int password = 0;
+int correctPassword = 1234;
+
+while (password != correctPassword) {
+    System.out.println("Enter password:");
+    password = 1234; // Simulate user input
+}
+System.out.println("Access granted!");
+
+// Enhanced for loop - iterate through array
+String[] fruits = {"Apple", "Banana", "Orange"};
+for (String fruit : fruits) {
+    System.out.println("I like " + fruit);
+}
+
+// Break example
+for (int i = 1; i <= 10; i++) {
+    if (i == 5) break;
+    System.out.println(i);
+} // Stops at 4`
+      }
+    },
+    {
+      id: 5,
+      title: "Arrays",
+      icon: Box,
+      content: {
+        analogy: "An array is like a row of lockers, all numbered. Each locker can hold one item. Instead of having separate variables for student1, student2, student3, you have one 'students' array with numbered positions!",
+        visual: "arrays",
+        keyPoints: [
+          "Arrays store multiple values of the same type",
+          "Fixed size once created",
+          "Index starts at 0 (first element is at position 0)",
+          "Access elements using square brackets []"
+        ],
+        code: `// Creating arrays
+int[] numbers = {10, 20, 30, 40, 50};
+String[] names = new String[3];
+
+// Assigning values
+names[0] = "Alice";
+names[1] = "Bob";
+names[2] = "Charlie";
+
+// Accessing elements
+System.out.println("First number: " + numbers[0]); // 10
+System.out.println("First name: " + names[0]);     // Alice
+
+// Array length
+System.out.println("Array size: " + numbers.length); // 5
+
+// Looping through array
+System.out.println("All numbers:");
+for (int i = 0; i < numbers.length; i++) {
+    System.out.println(numbers[i]);
+}
+
+// Finding maximum in array
+int max = numbers[0];
+for (int num : numbers) {
+    if (num > max) {
+        max = num;
+    }
+}
+System.out.println("Maximum: " + max);`
+      }
+    },
+    {
+      id: 6,
+      title: "Methods (Functions)",
+      icon: Code,
+      content: {
+        analogy: "Methods are like recipes. You give them ingredients (parameters), they follow steps, and give you back a dish (return value). Instead of writing the same recipe every time, you just call it by name!",
+        visual: "methods",
+        keyPoints: [
+          "Methods organize code into reusable blocks",
+          "Can take inputs (parameters) and return outputs",
+          "Must specify return type (or void for no return)",
+          "Call methods by name with arguments"
+        ],
+        code: `// Method that returns a value
+public static int addNumbers(int a, int b) {
+    int sum = a + b;
+    return sum;
+}
+
+// Method with no return value (void)
+public static void greetPerson(String name) {
+    System.out.println("Hello, " + name + "!");
+}
+
+// Method with multiple parameters
+public static double calculateArea(double length, double width) {
+    return length * width;
+}
+
+// Method overloading - same name, different parameters
+public static int multiply(int a, int b) {
+    return a * b;
+}
+
+public static double multiply(double a, double b) {
+    return a * b;
+}
+
+// Using the methods
+public static void main(String[] args) {
+    int result = addNumbers(5, 3);
+    System.out.println("Sum: " + result);
+    
+    greetPerson("Alice");
+    
+    double area = calculateArea(5.0, 3.0);
+    System.out.println("Area: " + area);
+    
+    System.out.println(multiply(4, 5));      // 20
+    System.out.println(multiply(4.5, 2.0));  // 9.0
+}`
+      }
+    },
+    {
+      id: 7,
+      title: "Classes & Objects (OOP)",
+      icon: Users,
+      content: {
+        analogy: "Think of a Class as a blueprint for a house, and Objects as the actual houses built from that blueprint. The blueprint defines what every house has (rooms, doors), but each house is a separate, real thing with its own specific details!",
+        visual: "oop",
+        keyPoints: [
+          "Class is a template, Object is an instance",
+          "Classes have properties (fields) and behaviors (methods)",
+          "Objects are created using 'new' keyword",
+          "Encapsulation: keep data safe with private/public"
+        ],
+        code: `// Defining a class
+public class Car {
+    // Properties (fields)
+    private String brand;
+    private String color;
+    private int year;
+    
+    // Constructor - runs when object is created
+    public Car(String brand, String color, int year) {
+        this.brand = brand;
+        this.color = color;
+        this.year = year;
+    }
+    
+    // Methods (behaviors)
+    public void start() {
+        System.out.println(brand + " is starting...");
+    }
+    
+    public void displayInfo() {
+        System.out.println(year + " " + color + " " + brand);
+    }
+    
+    // Getters and setters
+    public String getBrand() {
+        return brand;
+    }
+    
+    public void setColor(String color) {
+        this.color = color;
+    }
+}
+
+// Using the class
+public class Main {
+    public static void main(String[] args) {
+        // Creating objects
+        Car myCar = new Car("Toyota", "Red", 2022);
+        Car yourCar = new Car("Honda", "Blue", 2023);
+        
+        // Using object methods
+        myCar.start();
+        myCar.displayInfo();
+        
+        yourCar.start();
+        yourCar.displayInfo();
+    }
+}`
+      }
+    }
+  ];
+
+  const VisualComponent = ({ type }) => {
+    switch(type) {
+      case 'coffee-intro':
+        return (
+          <div className="flex items-center justify-center gap-8 p-8 bg-gradient-to-r from-amber-50 to-orange-50 rounded-lg">
+            <div className="text-center">
+              <div className="text-6xl mb-2">☕</div>
+              <div className="font-semibold">Java Code</div>
+            </div>
+            <div className="text-4xl">→</div>
+            <div className="text-center">
+              <div className="text-6xl mb-2">💻</div>
+              <div className="font-semibold">Any Computer</div>
+            </div>
+            <div className="text-4xl">→</div>
+            <div className="text-center">
+              <div className="text-6xl mb-2">✨</div>
+              <div className="font-semibold">Working Program</div>
+            </div>
+          </div>
+        );
+      
+      case 'variables':
+        return (
+          <div className="grid grid-cols-2 gap-4 p-6 bg-blue-50 rounded-lg">
+            <div className="bg-white p-4 rounded shadow text-center">
+              <div className="text-3xl mb-2">📦</div>
+              <div className="font-bold text-blue-600">int age = 25</div>
+              <div className="text-sm text-gray-600 mt-2">Box labeled "age" holds number 25</div>
+            </div>
+            <div className="bg-white p-4 rounded shadow text-center">
+              <div className="text-3xl mb-2">📝</div>
+              <div className="font-bold text-green-600">String name = "John"</div>
+              <div className="text-sm text-gray-600 mt-2">Box labeled "name" holds text "John"</div>
+            </div>
+            <div className="bg-white p-4 rounded shadow text-center">
+              <div className="text-3xl mb-2">💰</div>
+              <div className="font-bold text-purple-600">double price = 19.99</div>
+              <div className="text-sm text-gray-600 mt-2">Box for decimal numbers</div>
+            </div>
+            <div className="bg-white p-4 rounded shadow text-center">
+              <div className="text-3xl mb-2">✅</div>
+              <div className="font-bold text-red-600">boolean isTrue = true</div>
+              <div className="text-sm text-gray-600 mt-2">Box holds true or false</div>
+            </div>
+          </div>
+        );
+      
+      case 'operators':
+        return (
+          <div className="p-6 bg-purple-50 rounded-lg">
+            <div className="grid grid-cols-3 gap-4 mb-4">
+              <div className="bg-white p-3 rounded shadow text-center">
+                <div className="text-2xl font-bold text-blue-600">+</div>
+                <div className="text-sm">Addition</div>
+                <div className="text-xs text-gray-600">5 + 3 = 8</div>
+              </div>
+              <div className="bg-white p-3 rounded shadow text-center">
+                <div className="text-2xl font-bold text-green-600">-</div>
+                <div className="text-sm">Subtraction</div>
+                <div className="text-xs text-gray-600">5 - 3 = 2</div>
+              </div>
+              <div className="bg-white p-3 rounded shadow text-center">
+                <div className="text-2xl font-bold text-purple-600">*</div>
+                <div className="text-sm">Multiplication</div>
+                <div className="text-xs text-gray-600">5 * 3 = 15</div>
+              </div>
+            </div>
+            <div className="grid grid-cols-3 gap-4">
+              <div className="bg-white p-3 rounded shadow text-center">
+                <div className="text-2xl font-bold text-red-600">==</div>
+                <div className="text-sm">Equal to</div>
+                <div className="text-xs text-gray-600">5 == 5 → true</div>
+              </div>
+              <div className="bg-white p-3 rounded shadow text-center">
+                <div className="text-2xl font-bold text-orange-600">&gt;</div>
+                <div className="text-sm">Greater than</div>
+                <div className="text-xs text-gray-600">5 &gt; 3 → true</div>
+              </div>
+              <div className="bg-white p-3 rounded shadow text-center">
+                <div className="text-2xl font-bold text-pink-600">&&</div>
+                <div className="text-sm">AND</div>
+                <div className="text-xs text-gray-600">Both must be true</div>
+              </div>
+            </div>
+          </div>
+        );
+      
+      case 'control-flow':
+        return (
+          <div className="p-6 bg-green-50 rounded-lg">
+            <div className="flex flex-col items-center gap-4">
+              <div className="bg-yellow-200 p-4 rounded-lg font-semibold text-center w-48">
+                Is temperature &gt; 30?
+              </div>
+              <div className="flex gap-8">
+                <div className="flex flex-col items-center">
+                  <div className="text-xl font-bold text-green-600">✓ YES</div>
+                  <div className="mt-2 bg-green-200 p-3 rounded">Print "It's hot!"</div>
+                </div>
+                <div className="flex flex-col items-center">
+                  <div className="text-xl font-bold text-red-600">✗ NO</div>
+                  <div className="mt-2 bg-blue-200 p-3 rounded">Check next condition</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      
+      case 'loops':
+        return (
+          <div className="p-6 bg-orange-50 rounded-lg">
+            <div className="text-center mb-4 font-semibold text-lg">Loop cycles through tasks</div>
+            <div className="flex justify-center gap-4">
+              {[1, 2, 3, 4, 5].map(num => (
+                <div key={num} className="bg-orange-200 p-4 rounded-full w-16 h-16 flex items-center justify-center font-bold text-xl">
+                  {num}
+                </div>
+              ))}
+            </div>
+            <div className="text-center mt-4 text-sm text-gray-600">
+              Instead of writing 5 separate commands, the loop does it automatically!
+            </div>
+          </div>
+        );
+      
+      case 'arrays':
+        return (
+          <div className="p-6 bg-pink-50 rounded-lg">
+            <div className="text-center mb-4 font-semibold">Array: Like numbered lockers</div>
+            <div className="flex justify-center gap-2">
+              {['Apple', 'Banana', 'Orange', 'Grape', 'Mango'].map((fruit, idx) => (
+                <div key={idx} className="flex flex-col items-center">
+                  <div className="bg-pink-200 border-2 border-pink-400 p-3 rounded w-20 h-20 flex items-center justify-center text-xs font-semibold">
+                    {fruit}
+                  </div>
+                  <div className="mt-1 text-sm font-bold text-pink-600">[{idx}]</div>
+                </div>
+              ))}
+            </div>
+            <div className="text-center mt-4 text-sm text-gray-600">
+              Access any fruit by its index number: fruits[0] = "Apple"
+            </div>
+          </div>
+        );
+      
+      case 'methods':
+        return (
+          <div className="p-6 bg-indigo-50 rounded-lg">
+            <div className="flex items-center justify-center gap-6">
+              <div className="text-center">
+                <div className="bg-indigo-200 p-4 rounded-lg">
+                  <div className="font-bold">Input</div>
+                  <div className="text-2xl">🥚 🥛 🍫</div>
+                  <div className="text-sm">ingredients</div>
+                </div>
+              </div>
+              <div className="text-3xl">→</div>
+              <div className="text-center">
+                <div className="bg-indigo-300 p-4 rounded-lg">
+                  <div className="font-bold">Method</div>
+                  <div className="text-2xl">👨‍🍳</div>
+                  <div className="text-sm">makeCake()</div>
+                </div>
+              </div>
+              <div className="text-3xl">→</div>
+              <div className="text-center">
+                <div className="bg-indigo-200 p-4 rounded-lg">
+                  <div className="font-bold">Output</div>
+                  <div className="text-2xl">🎂</div>
+                  <div className="text-sm">return cake</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      
+      case 'oop':
+        return (
+          <div className="p-6 bg-teal-50 rounded-lg">
+            <div className="grid grid-cols-2 gap-6">
+              <div className="text-center">
+                <div className="bg-teal-200 p-6 rounded-lg">
+                  <div className="text-3xl mb-2">📋</div>
+                  <div className="font-bold text-lg">Class (Blueprint)</div>
+                  <div className="text-sm mt-2">Car template:</div>
+                  <div className="text-xs mt-1">- brand</div>
+                  <div className="text-xs">- color</div>
+                  <div className="text-xs">- start()</div>
+                </div>
+              </div>
+              <div className="flex flex-col gap-3">
+                <div className="bg-teal-300 p-4 rounded-lg text-center">
+                  <div className="text-2xl mb-1">🚗</div>
+                  <div className="font-semibold text-sm">Object 1: Toyota</div>
+                </div>
+                <div className="bg-teal-300 p-4 rounded-lg text-center">
+                  <div className="text-2xl mb-1">🚙</div>
+                  <div className="font-semibold text-sm">Object 2: Honda</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      
+      default:
+        return null;
+    }
+  };
+
+  const currentSection = sections[activeSection];
+  const SectionIcon = currentSection.icon;
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
+          <div className="flex items-center gap-3 mb-2">
+            <Coffee className="text-orange-600" size={36} />
+            <h1 className="text-3xl font-bold text-gray-800">Java Programming for Beginners</h1>
+          </div>
+          <p className="text-gray-600">Learn Java from scratch with easy explanations, visuals, and hands-on examples!</p>
+        </div>
+
+        {/* Navigation */}
+        <div className="bg-white rounded-lg shadow-lg p-4 mb-6">
+          <div className="flex flex-wrap gap-2">
+            {sections.map((section) => {
+              const Icon = section.icon;
+              return (
+                <button
+                  key={section.id}
+                  onClick={() => setActiveSection(section.id)}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
+                    activeSection === section.id
+                      ? 'bg-blue-600 text-white shadow-md'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  <Icon size={18} />
+                  <span className="text-sm font-medium">{section.title}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="bg-white rounded-lg shadow-lg p-8">
+          {/* Section Header */}
+          <div className="flex items-center gap-3 mb-6 pb-4 border-b-2 border-blue-200">
+            <SectionIcon className="text-blue-600" size={32} />
+            <h2 className="text-2xl font-bold text-gray-800">{currentSection.title}</h2>
+          </div>
+
+          {/* Analogy */}
+          <div className="bg-yellow-50 border-l-4 border-yellow-400 p-6 mb-6 rounded-r-lg">
+            <div className="flex items-start gap-3">
+              <Lightbulb className="text-yellow-600 flex-shrink-0 mt-1" size={24} />
+              <div>
+                <h3 className="font-bold text-lg text-gray-800 mb-2">Simple Analogy</h3>
+                <p className="text-gray-700 leading-relaxed">{currentSection.content.analogy}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Visual */}
+          <div className="mb-6">
+            <h3 className="font-bold text-lg text-gray-800 mb-3">Visual Representation</h3>
+            <VisualComponent type={currentSection.content.visual} />
+          </div>
+
+          {/* Key Points */}
+          <div className="mb-6">
+            <h3 className="font-bold text-lg text-gray-800 mb-3">Key Points to Remember</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {currentSection.content.keyPoints.map((point, idx) => (
+                <div key={idx} className="flex items-start gap-2 bg-green-50 p-3 rounded-lg">
+                  <CheckCircle className="text-green-600 flex-shrink-0 mt-0.5" size={18} />
+                  <span className="text-gray-700 text-sm">{point}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Code Example */}
+          <div className="mb-6">
+            <h3 className="font-bold text-lg text-gray-800 mb-3">Code Example</h3>
+            <div className="bg-gray-900 text-gray-100 p-6 rounded-lg overflow-x-auto">
+              <pre className="text-sm leading-relaxed">
+                <code>{currentSection.content.code}</code>
+              </pre>
+            </div>
+          </div>
+
+          {/* Navigation Buttons */}
+          <div className="flex justify-between items-center pt-6 border-t-2 border-gray-200">
+            <button
+              onClick={() => setActiveSection(Math.max(0, activeSection - 1))}
+              disabled={activeSection === 0}
+              className={`px-6 py-2 rounded-lg font-medium transition-all ${
+                activeSection === 0
+                  ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                  : 'bg-blue-600 text-white hover:bg-blue-700'
+              }`}
+            >
+              ← Previous
+            </button>
+            
+            <div className="text-sm text-gray-600">
+              Section {activeSection + 1} of {sections.length}
+            </div>
+            
+            <button
+              onClick={() => setActiveSection(Math.min(sections.length - 1, activeSection + 1))}
+              disabled={activeSection === sections.length - 1}
+              className={`px-6 py-2 rounded-lg font-medium transition-all ${
+                activeSection === sections.length - 1
+                  ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                  : 'bg-blue-600 text-white hover:bg-blue-700'
+              }`}
+            >
+              Next →
+            </button>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="mt-6 bg-white rounded-lg shadow-lg p-6 text-center">
+          <h3 className="font-bold text-lg text-gray-800 mb-2">🎯 Practice Makes Perfect!</h3>
+          <p className="text-gray-600">
+            The best way to learn Java is by writing code. Try modifying the examples above and see what happens!
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default JavaGuide;
